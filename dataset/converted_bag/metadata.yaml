@@ -1,0 +1,78 @@
+rosbag2_bagfile_information:
+  compression_format: ''
+  compression_mode: ''
+  custom_data: {}
+  duration:
+    nanoseconds: 123359735000
+  files:
+  - duration:
+      nanoseconds: 123359735000
+    message_count: 452013
+    path: converted_bag.db3
+    starting_time:
+      nanoseconds_since_epoch: 0
+  message_count: 452013
+  relative_file_paths:
+  - converted_bag.db3
+  ros_distro: rosbags
+  starting_time:
+    nanoseconds_since_epoch: 0
+  storage_identifier: sqlite3
+  topics_with_message_count:
+  - message_count: 34734
+    topic_metadata:
+      name: /tdoa_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: cf_msgs/msg/Tdoa
+      type_description_hash: RIHS01_0656b590358b7b4008a6beda0759453d26c5dc86f251725aa12ef21733b01e9a
+  - message_count: 24820
+    topic_metadata:
+      name: /pose_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: geometry_msgs/msg/PoseWithCovarianceStamped
+      type_description_hash: RIHS01_26432f9803e43727d3c8f668d1fdb3c630f548af631e2f4e31382371bfea3b6e
+  - message_count: 2898
+    topic_metadata:
+      name: /tof_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: cf_msgs/msg/Tof
+      type_description_hash: RIHS01_18857fd1ba2be38581093df7ef1e2752b89d2fdcbc03b6bf06df903fc84e35dc
+  - message_count: 9939
+    topic_metadata:
+      name: /flow_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: cf_msgs/msg/Flow
+      type_description_hash: RIHS01_2ebd0eb271ac4cdd53c08eb5e38aaf1fe660d7ff17c0a09fc3a8e3b4814a4670
+  - message_count: 124466
+    topic_metadata:
+      name: /gyro_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: cf_msgs/msg/Gyro
+      type_description_hash: RIHS01_bbc6e787e713c65e61130573fc0809d16549b46309aada341f4d8fbebc430045
+  - message_count: 124466
+    topic_metadata:
+      name: /accel_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: cf_msgs/msg/Accel
+      type_description_hash: RIHS01_2416e11a4d1b220b15243ff90678f36aa8827ef2fc64ac8a1ca0efe891b58efa
+  - message_count: 6224
+    topic_metadata:
+      name: /baro_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: cf_msgs/msg/Baro
+      type_description_hash: RIHS01_4b6694285afce6b2ec33d0f0d7ac15dba2594bef2cfe6281c90f1a7c903b2077
+  - message_count: 124466
+    topic_metadata:
+      name: /imu_data
+      offered_qos_profiles: ''
+      serialization_format: cdr
+      type: sensor_msgs/msg/Imu
+      type_description_hash: RIHS01_7d9a00ff131080897a5ec7e26e315954b8eae3353c3f995c55faf71574000b5b
+  version: 8
