@@ -8,6 +8,7 @@
 #include <sensor_msgs/msg/magnetic_field.h>
 #include <rclc/publisher.h>
 #include <rosidl_runtime_c/string_functions.h> // Include for string assignment
+#include "MPU9250.h"
 
 #include <SPI.h>
 #include "DW1000Ranging.h"
@@ -21,6 +22,9 @@
 const uint8_t PIN_RST = 27; // reset pin
 const uint8_t PIN_IRQ = 34; // irq pin
 const uint8_t PIN_SS = 5;   // spi select pin
+
+// Create an MPU9250 object with the sensor on I2C bus 0 with address 0x68
+MPU9250 IMU(Wire, 0x68);
 
 
 void inactiveDevice(DW1000Device *device);
@@ -55,32 +59,40 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
   RCLC_UNUSED(last_call_time);
   if (timer != NULL) {
     // Populate UWB message
-    uwb_msg.range = DW1000Ranging.getDistantDevice()->getRange();
+    // uwb_msg.range = 0;
+        uwb_msg.range = DW1000Ranging.getDistantDevice()->getRange();
+    // Read sensor data
+    IMU.readSensor();
+
     uwb_msg.min_range = 0.0;
     uwb_msg.max_range = 100.0;
     uwb_msg.header.stamp.sec = millis() / 1000;
     uwb_msg.header.stamp.nanosec = (millis() % 1000) * 1000000;
     RCSOFTCHECK(rcl_publish(&uwb_publisher, &uwb_msg, NULL));
 
-    // Populate IMU message
-    imu_msg.linear_acceleration.x = 0;
-    imu_msg.linear_acceleration.y = 0;
-    imu_msg.linear_acceleration.z = 0;
-    imu_msg.angular_velocity.x = 0;
-    imu_msg.angular_velocity.y = 0;
-    imu_msg.angular_velocity.z = 0;
-    imu_msg.orientation.x = 0;
-    imu_msg.orientation.y = 0;
-    imu_msg.orientation.z = 0;
-    imu_msg.orientation.w = 0;
+   // Populate the IMU message
+    imu_msg.linear_acceleration.x = IMU.getAccelX_mss();
+    imu_msg.linear_acceleration.y = IMU.getAccelY_mss();
+    imu_msg.linear_acceleration.z = IMU.getAccelZ_mss();
+
+    imu_msg.angular_velocity.x = IMU.getGyroX_rads();
+    imu_msg.angular_velocity.y = IMU.getGyroY_rads();
+    imu_msg.angular_velocity.z = IMU.getGyroZ_rads();
+
+    // Optional: Populate orientation if available
+    imu_msg.orientation.x = 0.0;
+    imu_msg.orientation.y = 0.0;
+    imu_msg.orientation.z = 0.0;
+    imu_msg.orientation.w = 1.0;
+
     imu_msg.header.stamp.sec = millis() / 1000;
     imu_msg.header.stamp.nanosec = (millis() % 1000) * 1000000;
     RCSOFTCHECK(rcl_publish(&imu_publisher, &imu_msg, NULL));
 
     // Populate Magnetometer message
-    mag_msg.magnetic_field.x = 0;
-    mag_msg.magnetic_field.y = 0;
-    mag_msg.magnetic_field.z = 0;
+    mag_msg.magnetic_field.x = IMU.getMagX_uT();
+    mag_msg.magnetic_field.y = IMU.getMagY_uT();
+    mag_msg.magnetic_field.z = IMU.getMagZ_uT();
     mag_msg.header.stamp.sec = millis() / 1000;
     mag_msg.header.stamp.nanosec = (millis() % 1000) * 1000000;
     RCSOFTCHECK(rcl_publish(&mag_publisher, &mag_msg, NULL));
@@ -89,18 +101,29 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
 
 void setup() {
   Serial.begin(115200);
-  set_microros_wifi_transports("MobinNet-2.4G-9DA4", "aras5113", IPAddress(192, 168, 1, 141), 8888);
-  delay(2000);
+  // set_microros_wifi_transports("MobinNet-2.4G-9DA4", "aras5113", IPAddress(192, 168, 1, 141), 8888);
+   set_microros_wifi_transports("D-Link", "09124151339", IPAddress(192, 168, 2, 9), 8888);
 
+  delay(2000);
+// Initialize the MPU9250 sensor
+  int status = IMU.begin();
+  if (status < 0) {
+    Serial.println("IMU initialization unsuccessful");
+    while (1) {}
+  }
+  IMU.setAccelRange(MPU9250::ACCEL_RANGE_8G);
+  IMU.setGyroRange(MPU9250::GYRO_RANGE_500DPS);
+  IMU.setDlpfBandwidth(MPU9250::DLPF_BANDWIDTH_20HZ);
+  IMU.setSrd(19);
      //init the configuration
     SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
     DW1000Ranging.initCommunication(PIN_RST, PIN_SS, PIN_IRQ); //Reset, CS, IRQ pin
-    //define the sketch as anchor. It will be great to dynamically change the type of module
+    // //define the sketch as anchor. It will be great to dynamically change the type of module
     DW1000Ranging.attachNewRange(newRange);
     DW1000Ranging.attachNewDevice(newDevice);
     DW1000Ranging.attachInactiveDevice(inactiveDevice);
     //Enable the filter to smooth the distance
-    //DW1000Ranging.useRangeFilter(true);
+    // DW1000Ranging.useRangeFilter(true);
  
     //we start the module as a tag
     DW1000Ranging.startAsTag("7D:00:22:EA:82:60:3B:9C", DW1000.MODE_LONGDATA_RANGE_LOWPOWER);
@@ -131,7 +154,7 @@ void setup() {
     ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, MagneticField),
     "mag_data"));
 
-  const unsigned int timer_timeout = 100; // 100 ms
+  const unsigned int timer_timeout = 10; // 100 ms
   RCCHECK(rclc_timer_init_default(
     &timer,
     &support,
@@ -150,14 +173,14 @@ void loop() {
 
 void newRange()
 {
-    Serial.print("from: ");
-    Serial.print(DW1000Ranging.getDistantDevice()->getShortAddress(), HEX);
-    Serial.print("\t Range: ");
-    Serial.print(DW1000Ranging.getDistantDevice()->getRange());
-    Serial.print(" m");
-    Serial.print("\t RX power: ");
-    Serial.print(DW1000Ranging.getDistantDevice()->getRXPower());
-    Serial.println(" dBm");
+    // Serial.print("from: ");
+    // Serial.print(DW1000Ranging.getDistantDevice()->getShortAddress(), HEX);
+    // Serial.print("\t Range: ");
+    // Serial.print(DW1000Ranging.getDistantDevice()->getRange());
+    // Serial.print(" m");
+    // Serial.print("\t RX power: ");
+    // Serial.print(DW1000Ranging.getDistantDevice()->getRXPower());
+    // Serial.println(" dBm");
 }
  
 void newDevice(DW1000Device *device)

@@ -6,6 +6,7 @@
 #include <sensor_msgs/msg/range.h>
 #include <rclc/publisher.h>
 #include <rosidl_runtime_c/string_functions.h> // Include for string assignment
+#include "MPU9250.h"
 
 #include <SPI.h>
 #include "DW1000Ranging.h"
@@ -14,7 +15,7 @@
 #define SPI_MISO 19
 #define SPI_MOSI 23
 #define DW_CS 5
- 
+ int ID;
 // connection pins
 const uint8_t PIN_RST = 27; // reset pin
 const uint8_t PIN_IRQ = 34; // irq pin
@@ -58,7 +59,8 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
     // Read sensor data
     // DW1000Ranging.loop();
     float current_distance = DW1000Ranging.getDistantDevice()->getRange();
-    // uwb_msg.range = DW1000Ranging.getDistantDevice()->getRange();
+    uwb_msg.range = DW1000Ranging.getDistantDevice()->getRange();
+    uwb_msg.max_range = ID;
     // Serial.println(uwb_msg.range);
 
     // Populate the IMU message
@@ -135,10 +137,12 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
 }
 
 // Wi-Fi configuration
-IPAddress agent_ip(192, 168, 1, 141);
+IPAddress agent_ip(192, 168, 2, 9);
 size_t agent_port = 8888;
-char ssid[] = "MobinNet-2.4G-9DA4"; // Replace with your Wi-Fi SSID
-char psk[] = "aras5113"; // Replace with your Wi-Fi password
+// char ssid[] = "MobinNet-2.4G-9DA4"; // Replace with your Wi-Fi SSID
+// char psk[] = "aras5113"; // Replace with your Wi-Fi password
+char ssid[] = "D-Link"; // Replace with your Wi-Fi SSID
+char psk[] = "09124151339"; // Replace with your Wi-Fi password
 
 void setup() {
   // Initialize serial communication
@@ -204,7 +208,7 @@ void setup() {
 void loop() {
   // Spin the executor to handle the timer callbacks
   DW1000Ranging.loop();
-  // RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
+  RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
 }
 
 // void newRange()
@@ -266,6 +270,7 @@ void newDevice(DW1000Device *device)
     Serial.print("ranging init; 1 device added ! -> ");
     Serial.print(" short:");
     Serial.println(device->getShortAddress(), HEX);
+    ID = device->getShortAddress();
 }
  
 void inactiveDevice(DW1000Device *device)
