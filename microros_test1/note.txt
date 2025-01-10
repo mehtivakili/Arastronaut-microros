@@ -1,0 +1,12 @@
+useful reps for custom msg in microros:
+
+https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Custom-ROS2-Interfaces.html
+
+Custom message examples,
+
+https://github.com/micro-ROS/micro_ros_platformio/blob/main/ci/src/main.cpp
+
+https://github.com/hippo5329/micro-ROS-demos-platformio/blob/rolling/rclc/complex_msg_publisher/main.c
+
+wiki
+https://github.com/hippo5329/micro-ROS-demos-platformio/wiki
