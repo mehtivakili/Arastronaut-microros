@@ -1,0 +1,13 @@
+1. Fix the QoS Profile
+Replace the default QoS with qos_profile_sensor_data for compatibility with high-frequency IMU data streams:
+
+python
+Copy code
+from rclpy.qos import qos_profile_sensor_data
+
+self.subscription = self.create_subscription(
+    Imu,
+    '/imu/data_raw',
+    self.listener_callback,
+    qos_profile_sensor_data  # Ensure QoS compatibility
+)
