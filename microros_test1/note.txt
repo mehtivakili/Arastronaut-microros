@@ -10,3 +10,10 @@ https://github.com/hippo5329/micro-ROS-demos-platformio/blob/rolling/rclc/comple
 
 wiki
 https://github.com/hippo5329/micro-ROS-demos-platformio/wiki
+
+
+ToDo: 
+    custom message implementation
+    check the latency of the calibrated output data
+    also the latency after implementing micro-ros 
+    the consumed time and efficiency
