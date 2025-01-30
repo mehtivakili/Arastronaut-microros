@@ -8,7 +8,7 @@ The filter works by aligning the **measured sensor vectors** (from the accelerom
 ---
 
 ## 2. Gradient Descent Update Rule
-The **quaternion estimate** \( {^E_S}\hat{q} \) is updated iteratively to minimize the orientation error:
+The **quaternion estimate** $$ \( {^E_S}\hat{q} \) $$ is updated iteratively to minimize the orientation error:
 
 \[
 {^E_S}\hat{q}_{k+1} = {^E_S}\hat{q}_k - \mu \frac{\nabla f({^E_S}\hat{q}_k, {^E}d, {^S}s)}{\|\nabla f({^E_S}\hat{q}_k, {^E}d, {^S}s)\|}
