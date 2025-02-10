@@ -4,7 +4,7 @@
 The UWB Data Reader is a ROS2 package designed to process and visualize Ultra-Wideband (UWB) sensor data. It works in conjunction with the `cf_msgs` package to handle custom message types for various sensor data streams.
 
 ## Package Dependencies
-- ROS2 (tested with Humble)
+- ROS2 (tested with jazzy)
 - cf_msgs (Custom message package)
 - rclpy
 - geometry_msgs
