@@ -161,5 +161,4 @@ If you encounter issues:
 4. Push to the branch
 5. Create a Pull Request
 
-## License
-[Your License Information] 
+
