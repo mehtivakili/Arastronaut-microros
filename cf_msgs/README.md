@@ -103,12 +103,3 @@ To use these messages in your ROS 2 package:
    # ... other message types as needed
    ```
 
-## License
-This package is licensed under the Apache License 2.0.
-
-## Maintainer
-- Maintainer: [Your Name]
-- Email: user@todo.todo
-
-## Contributing
-If you would like to contribute to this package, please submit a pull request or open an issue on the repository. 
