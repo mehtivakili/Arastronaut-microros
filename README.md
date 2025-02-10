@@ -11,7 +11,7 @@ The UWB Data Reader is a ROS2 package designed to process and visualize Ultra-Wi
 - sensor_msgs
 
 ## Integration with cf_msgs
-The `cf_msgs` package provides custom message definitions that are used by the UWB Data Reader:
+The `cf_msgs` package provides custom message definitions that are used by the UWB Data Reader. For further information, please read the [cf_msgs README](../cf_msgs/README.md).:
 
 1. **Message Types Used**:
    - `cf_msgs/msg/Tdoa`: Time Difference of Arrival data
