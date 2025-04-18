@@ -77,7 +77,7 @@ const char WIFI_SSID[] = "Infinite-NW";                   // Wi-Fi SSID
 const char WIFI_PASSWORD[] = "00000000"; // Wi-Fi Password
 const char TAG_ADDRESS[] = "7D:00:22:EA:82:60:3B:9C"; // UWB Tag Address
 
-IPAddress AGENT_IP(192, 168, 1, 141); // Replace with your micro-ROS agent IP
+IPAddress AGENT_IP(192, 168, 2, 14); // Replace with your micro-ROS agent IP
 const size_t AGENT_PORT = 8888;     // Replace with your micro-ROS agent port
 
 // LCD settings
@@ -317,7 +317,7 @@ void setup() {
 
   // Initialize micro-ROS over Wi-Fi
 
-  set_microros_wifi_transports("MobinNet-2.4G-9DA4", "aras5113", AGENT_IP, AGENT_PORT);
+  set_microros_wifi_transports("D-Link", "09124151339", AGENT_IP, AGENT_PORT);
     Serial.println("Uifi ok");
 
   delay(2000); 
@@ -503,4 +503,4 @@ void updateRangeOnly(int row, float range)
     char buffer[16];
     snprintf(buffer, sizeof(buffer), "%.2f", range); // Format the range value
     lcd.printFixed(64, row * 8, buffer, STYLE_NORMAL); // Print the range at the appropriate row on the LCD
-}
+} 
