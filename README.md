@@ -1,4 +1,4 @@
-ndi
+NDI FOR INTERCOMMUNICATION BETWEEN CAMERAS TO DO!
 
 # Micro-ROS Implementation Guide
 
